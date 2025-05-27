@@ -13,7 +13,7 @@ import zave.molerodev.backend.service.UserService;
 
 @RestController
 @RequestMapping("/api/zave/user")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
