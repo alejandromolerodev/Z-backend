@@ -9,7 +9,7 @@ import zave.molerodev.backend.entities.Usuario;
 import zave.molerodev.backend.repository.UserRepository;
 
 @Service
-public class US_Impl implements UserService{
+public class UserService_Impl implements UserService{
 
     @Autowired
     private UserRepository userRepository;

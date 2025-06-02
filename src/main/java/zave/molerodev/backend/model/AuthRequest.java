@@ -3,7 +3,7 @@ package zave.molerodev.backend.model;
 public class AuthRequest {
     private String email;
     private String password;
-    private String nombre; // 👈 Añadido
+    private String nombre; 
 
     // Getters y Setters
     public String getEmail() {

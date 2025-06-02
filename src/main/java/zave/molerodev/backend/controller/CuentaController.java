@@ -134,4 +134,31 @@ public class CuentaController {
         List<Cuenta> cuentas = cuentaService.findByUserId(userId);
         return ResponseEntity.ok(cuentas);
     }
+
+    @DeleteMapping("/{cuentaId}")
+    public ResponseEntity<Void> eliminarCuenta(@PathVariable Long cuentaId) {
+        Cuenta cuenta = cuentaService.findById(cuentaId);
+        if (cuenta == null) {
+            return ResponseEntity.notFound().build();
+        }
+        cuentaService.deleteById(cuentaId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{cuentaId}")
+    public ResponseEntity<Cuenta> actualizarCuenta(@PathVariable Long cuentaId, @RequestBody Cuenta cuentaActualizada) {
+        Cuenta cuentaExistente = cuentaService.findById(cuentaId);
+        if (cuentaExistente == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Actualizar los campos necesarios
+        cuentaExistente.setNombre(cuentaActualizada.getNombre());
+        cuentaExistente.setTipo(cuentaActualizada.getTipo());
+        cuentaExistente.setSaldo(cuentaActualizada.getSaldo());
+        Cuenta cuentaGuardada = cuentaService.save(cuentaExistente);
+        return ResponseEntity.ok(cuentaGuardada);
+    }
+
+
 }

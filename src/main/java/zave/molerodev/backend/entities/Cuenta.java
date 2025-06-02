@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+
 @Entity
 public class Cuenta {
 
@@ -19,9 +23,16 @@ public class Cuenta {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")  // clave foránea a Usuario
+    @JsonBackReference
     private Usuario usuario;
 
-    // Nota: Quitamos la referencia a Usuario para romper ciclo
+    @JsonManagedReference
+    @OneToMany(mappedBy = "cuenta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ingreso> ingresos;
+    
+    @JsonManagedReference
+    @OneToMany(mappedBy = "cuenta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Gasto> gastos;
 
     // getters y setters
     public Long getId() { return id; }

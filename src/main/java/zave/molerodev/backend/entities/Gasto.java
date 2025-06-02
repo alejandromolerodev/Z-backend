@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Gasto {
 
@@ -22,6 +24,7 @@ public class Gasto {
 
     @ManyToOne
     @JoinColumn(name = "cuenta_id")  // clave foránea a Cuenta
+    @JsonBackReference
     private Cuenta cuenta;
 
     

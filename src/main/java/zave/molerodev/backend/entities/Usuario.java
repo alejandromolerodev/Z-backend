@@ -3,6 +3,8 @@ package zave.molerodev.backend.entities;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Usuario {
 
@@ -18,6 +20,9 @@ public class Usuario {
 
     private String rol;
 
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Cuenta> cuentas;
 
     // getters y setters
     public Long getId() { return id; }
@@ -35,5 +40,6 @@ public class Usuario {
     public String getRol() { return rol; }
     public void setRol(String rol) { this.rol = rol; }
 
-
+    public List<Cuenta> getCuentas() { return cuentas; }
+    public void setCuentas(List<Cuenta> cuentas) { this.cuentas = cuentas; }
 }
