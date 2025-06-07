@@ -13,13 +13,15 @@ public class Ingreso {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-   
+    @Column(nullable = false)
     private String categoria;
 
     private String descripcion;
 
+    @Column(nullable = false)
     private BigDecimal importe;
 
+    @Column(nullable = false)
     private LocalDate fecha;
 
     @ManyToOne
