@@ -21,7 +21,6 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class CuentaController {
 
-
     @Autowired
     private CuentaService cuentaService;
 
@@ -31,47 +30,43 @@ public class CuentaController {
     @Autowired
     private GastoService gastoService;
 
-
     @Autowired
     private UserService userService;
 
-    // Obtener todos los ingresos de una cuenta específica de un usuario
+    // Obtener todos los ingresos de una cuenta específica
     @GetMapping("/ingresos/{cuentaId}")
     public ResponseEntity<List<Ingreso>> getIngresosDeCuenta(@PathVariable Long cuentaId) {
         Cuenta cuenta = cuentaService.findById(cuentaId);
         if (cuenta == null) {
             return ResponseEntity.notFound().build();
         }
-
         List<Ingreso> ingresos = ingresoService.findByCuenta(cuenta);
         return ResponseEntity.ok(ingresos);
     }
 
-    // Obtener todos los gastos de una cuenta específica de un usuario
+    // Obtener todos los gastos de una cuenta específica
     @GetMapping("/gastos/{cuentaId}")
     public ResponseEntity<List<Gasto>> getGastosDeCuenta(@PathVariable Long cuentaId) {
         Cuenta cuenta = cuentaService.findById(cuentaId);
         if (cuenta == null) {
             return ResponseEntity.notFound().build();
         }
-
         List<Gasto> gastos = gastoService.findByCuenta(cuenta);
         return ResponseEntity.ok(gastos);
     }
 
-    // Obtener saldo de una cuenta específica
+    // Obtener el saldo de una cuenta específica
     @GetMapping("/saldo/{cuentaId}")
     public ResponseEntity<BigDecimal> getSaldoDeCuenta(@PathVariable Long cuentaId) {
         Cuenta cuenta = cuentaService.findById(cuentaId);
         if (cuenta == null) {
             return ResponseEntity.notFound().build();
         }
-
-         BigDecimal saldo = cuenta.getSaldo();
+        BigDecimal saldo = cuenta.getSaldo();
         return ResponseEntity.ok(saldo);
     }
 
-    // Crear un nuevo ingreso
+    // Agregar un ingreso a una cuenta y actualizar el saldo
     @PostMapping("/ingresos/{cuentaId}")
     public ResponseEntity<Ingreso> agregarIngreso(
             @PathVariable Long cuentaId, @RequestBody Ingreso ingreso) {
@@ -79,19 +74,14 @@ public class CuentaController {
         if (cuenta == null) {
             return ResponseEntity.notFound().build();
         }
-    
         ingreso.setCuenta(cuenta); // Asocia el ingreso a la cuenta
-    
-        // Sumar el importe del ingreso al saldo
-        cuenta.setSaldo(cuenta.getSaldo().add(ingreso.getImporte()));
-        cuentaService.save(cuenta); // Guardar el nuevo saldo
-    
+        cuenta.setSaldo(cuenta.getSaldo().add(ingreso.getImporte())); // Suma el importe al saldo
+        cuentaService.save(cuenta); // Guarda el nuevo saldo
         Ingreso nuevoIngreso = ingresoService.save(ingreso);
         return ResponseEntity.ok(nuevoIngreso);
     }
-    
 
-    // Crear un nuevo gasto
+    // Agregar un gasto a una cuenta y actualizar el saldo
     @PostMapping("/gastos/{cuentaId}")
     public ResponseEntity<Gasto> agregarGasto(
             @PathVariable Long cuentaId, @RequestBody Gasto gasto) {
@@ -99,42 +89,36 @@ public class CuentaController {
         if (cuenta == null) {
             return ResponseEntity.notFound().build();
         }
-
         gasto.setCuenta(cuenta); // Asocia el gasto a la cuenta
-        cuenta.setSaldo(cuenta.getSaldo().subtract(gasto.getImporte()));
+        cuenta.setSaldo(cuenta.getSaldo().subtract(gasto.getImporte())); // Resta el importe al saldo
         Gasto nuevoGasto = gastoService.save(gasto);
         return ResponseEntity.ok(nuevoGasto);
     }
 
-
+    // Crear una nueva cuenta para un usuario
     @PostMapping("/usuario/{userId}")
     public ResponseEntity<Cuenta> crearCuenta(@PathVariable Long userId, @RequestBody Cuenta cuenta) {
-        Usuario usuario = userService.findById(userId); // Busca al usuario una sola vez
+        Usuario usuario = userService.findById(userId);
         if (usuario == null) {
-            return ResponseEntity.notFound().build(); // Retorna 404 si el usuario no existe
+            return ResponseEntity.notFound().build();
         }
-
-        System.out.println("Usuario encontrado: " + usuario.getUsername());
-        System.out.println("Creando cuenta para el usuario: " + userId);
-
         cuenta.setUsuario(usuario); // Asocia la cuenta al usuario
         Cuenta nuevaCuenta = cuentaService.save(cuenta); // Guarda la cuenta
-        return ResponseEntity.ok(nuevaCuenta); // Retorna la cuenta creada
-
-
+        return ResponseEntity.ok(nuevaCuenta);
     }
 
+    // Obtener todas las cuentas de un usuario
     @GetMapping("/cuentas/{userId}")
     public ResponseEntity<List<Cuenta>> obtenerCuentasPorUsuario(@PathVariable Long userId) {
         Usuario usuario = userService.findById(userId);
         if (usuario == null) {
             return ResponseEntity.notFound().build();
         }
-
         List<Cuenta> cuentas = cuentaService.findByUserId(userId);
         return ResponseEntity.ok(cuentas);
     }
 
+    // Eliminar una cuenta por su ID
     @DeleteMapping("/{cuentaId}")
     public ResponseEntity<Void> eliminarCuenta(@PathVariable Long cuentaId) {
         Cuenta cuenta = cuentaService.findById(cuentaId);
@@ -145,20 +129,17 @@ public class CuentaController {
         return ResponseEntity.noContent().build();
     }
 
+    // Actualizar los datos de una cuenta existente
     @PutMapping("/{cuentaId}")
     public ResponseEntity<Cuenta> actualizarCuenta(@PathVariable Long cuentaId, @RequestBody Cuenta cuentaActualizada) {
         Cuenta cuentaExistente = cuentaService.findById(cuentaId);
         if (cuentaExistente == null) {
             return ResponseEntity.notFound().build();
         }
-
-        // Actualizar los campos necesarios
         cuentaExistente.setNombre(cuentaActualizada.getNombre());
         cuentaExistente.setTipo(cuentaActualizada.getTipo());
         cuentaExistente.setSaldo(cuentaActualizada.getSaldo());
         Cuenta cuentaGuardada = cuentaService.save(cuentaExistente);
         return ResponseEntity.ok(cuentaGuardada);
     }
-
-
 }

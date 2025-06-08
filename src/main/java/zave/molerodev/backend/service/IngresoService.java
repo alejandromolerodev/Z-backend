@@ -7,6 +7,9 @@ import zave.molerodev.backend.entities.Ingreso;
 
 public interface IngresoService {
 
+    // Busca todos los ingresos de una cuenta
     List<Ingreso> findByCuenta(Cuenta cuenta);
+
+    // Guarda un ingreso nuevo o actualizado
     Ingreso save(Ingreso ingreso);
 }

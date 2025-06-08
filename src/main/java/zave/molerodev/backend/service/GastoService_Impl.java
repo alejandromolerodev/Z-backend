@@ -15,10 +15,14 @@ public class GastoService_Impl implements GastoService {
     @Autowired
     private GastoRepository gastoRepository;
 
+    // Busca todos los gastos de una cuenta
+    @Override
     public List<Gasto> findByCuenta(Cuenta cuenta) {
         return gastoRepository.findByCuenta(cuenta);
     }
    
+    // Guarda un gasto nuevo o actualizado
+    @Override
     public Gasto save(Gasto gasto) {
         return gastoRepository.save(gasto);
     }

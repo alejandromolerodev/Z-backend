@@ -24,38 +24,39 @@ public class CuentaService_Impl implements CuentaService {
     @Autowired
     private GastoRepository gastoRepository;
 
-    // Obtener una cuenta específica por su id
+    // Busca una cuenta por su ID
     @Override
     public Cuenta findById(Long cuentaId) {
-        return cuentaRepository.findById(cuentaId).orElse(null); // Devuelve la cuenta si existe o null si no
+        return cuentaRepository.findById(cuentaId).orElse(null);
     }
 
-    // Obtener todas las cuentas de un usuario
+    // Busca todas las cuentas de un usuario por su ID
     @Override
     public List<Cuenta> findByUserId(Long userId) {
         return cuentaRepository.findByUsuarioId(userId);
     }
 
+    // Obtiene todos los gastos de una cuenta
     @Override
     public List<Gasto> findGastosByCuenta(Cuenta cuenta) {
         return gastoRepository.findByCuenta(cuenta);
     }
+
+    // Obtiene todos los ingresos de una cuenta
     @Override
     public List<Ingreso> findIngresosByCuenta(Cuenta cuenta) {
         return ingresoRepository.findByCuenta(cuenta);
     }
-    
 
-
-    // Crear una nueva cuenta
+    // Guarda una cuenta nueva o actualizada
     @Override
     public Cuenta save(Cuenta cuenta) {
         return cuentaRepository.save(cuenta);
     }
 
-     @Override
+    // Elimina una cuenta por su ID
+    @Override
     public void deleteById(Long id) {
         cuentaRepository.deleteById(id);
-
     }
 }

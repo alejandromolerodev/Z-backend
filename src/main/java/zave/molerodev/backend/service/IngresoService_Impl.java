@@ -15,11 +15,13 @@ public class IngresoService_Impl implements IngresoService {
     @Autowired
     private IngresoRepository ingresoRepository;
 
+    // Busca todos los ingresos de una cuenta
     @Override
     public List<Ingreso> findByCuenta(Cuenta cuenta) {
         return ingresoRepository.findByCuenta(cuenta);
     }
    
+    // Guarda un ingreso nuevo o actualizado
     @Override
     public Ingreso save(Ingreso ingreso) {
         return ingresoRepository.save(ingreso);

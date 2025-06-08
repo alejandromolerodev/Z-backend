@@ -19,55 +19,50 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // Registro de un usuario sin autenticación
+    // Registrar un usuario (sin autenticación)
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody AuthRequest request) {
         if (userService.findByEmail(request.getEmail()) != null) {
             return ResponseEntity.status(400).body("Ya existe un usuario con ese correo");
         }
-    
         Usuario newUser = new Usuario();
         newUser.setEmail(request.getEmail());
         newUser.setPassword(request.getPassword());
         newUser.setRol("USER");
         newUser.setUsername(request.getNombre());
-    
         userService.save(newUser);
-        return ResponseEntity.ok(Map.of("userId", newUser.getId())); // 👈 Esto es clave
+        return ResponseEntity.ok(Map.of("userId", newUser.getId()));
     }
-    
+
+    // Login de usuario (solo retorna el ID si existe)
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest request) {
         Usuario user = userService.findByEmail(request.getEmail());
         if (user == null) {
             return ResponseEntity.status(401).body("Credenciales inválidas");
         }
-    
-        return ResponseEntity.ok(Map.of("userId", user.getId())); // 👈 También aquí
+        return ResponseEntity.ok(Map.of("userId", user.getId()));
     }
-    
 
-
-
-
-    // Obtención de todos los usuarios
+    // Obtener todos los usuarios
     @GetMapping("/all")
     public ResponseEntity<List<Usuario>> getAllUsers() {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    // Obtención de un usuario por ID
+    // Obtener un usuario por ID
     @GetMapping("/id/{id}")
     public ResponseEntity<Usuario> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.findById(id));
     }
 
-    // Obtención de un usuario por email
+    // Obtener un usuario por email
     @GetMapping("/email/{email}")
     public ResponseEntity<Usuario> getUserByEmail(@PathVariable String email) {
         return ResponseEntity.ok(userService.findByEmail(email));
     }
 
+    // Obtener el username de un usuario por ID
     @GetMapping("/username/{id}")
     public ResponseEntity<String> getUsernameById(@PathVariable Long id) {
         Usuario user = userService.findById(id);
@@ -77,13 +72,13 @@ public class UserController {
         return ResponseEntity.ok(user.getUsername());
     }
 
-    // Creación de un usuario
+    // Crear un usuario (método general)
     @PostMapping
     public ResponseEntity<Usuario> createUser(@RequestBody Usuario user) {
         return ResponseEntity.ok(userService.save(user));
     }
 
-    // Actualización de un usuario por ID
+    // Actualizar un usuario por ID
     @PutMapping("/id/{id}")
     public ResponseEntity<Usuario> updateUserById(@PathVariable Long id, @RequestBody Usuario user) {
         Usuario existingUser = userService.findById(id);
@@ -94,7 +89,7 @@ public class UserController {
         return ResponseEntity.ok(userService.update(user));
     }
 
-    // Actualización de un usuario por email
+    // Actualizar un usuario por email
     @PutMapping("/email/{email}")
     public ResponseEntity<Usuario> updateUserByEmail(@PathVariable String email, @RequestBody Usuario user) {
         Usuario existingUser = userService.findByEmail(email);
@@ -105,7 +100,7 @@ public class UserController {
         return ResponseEntity.ok(userService.update(user));
     }
 
-    // Eliminación de un usuario por ID
+    // Eliminar un usuario por ID
     @DeleteMapping("/id/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
         Usuario existingUser = userService.findById(id);

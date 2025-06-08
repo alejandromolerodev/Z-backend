@@ -8,5 +8,5 @@ import zave.molerodev.backend.entities.Cuenta;
 @Repository
 public interface CuentaRepository extends JpaRepository<Cuenta, Long> {
 
-    List<Cuenta> findByUsuarioId(Long usuarioId);  // Esto es correcto, ya que "usuario_id" es el nombre de la columna
+    List<Cuenta> findByUsuarioId(Long usuarioId); 
 }
